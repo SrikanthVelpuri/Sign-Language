@@ -1,0 +1,63 @@
+1649/1649 [==============================] - 206s 125ms/step - loss: 1.3924 - acc: 0.5864 - val_loss: 1.2373 - val_acc: 0.5835
+Epoch 2/20
+1649/1649 [==============================] - 166s 100ms/step - loss: 0.5993 - acc: 0.7926 - val_loss: 0.5689 - val_acc: 0.8039
+Epoch 3/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.4266 - acc: 0.8611 - val_loss: 0.5338 - val_acc: 0.8305
+Epoch 4/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.3145 - acc: 0.8987 - val_loss: 1.3909 - val_acc: 0.6368
+Epoch 5/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.2725 - acc: 0.9145 - val_loss: 0.4397 - val_acc: 0.8765
+Epoch 6/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.2074 - acc: 0.9406 - val_loss: 0.5473 - val_acc: 0.8063
+Epoch 7/20
+1649/1649 [==============================] - 166s 100ms/step - loss: 0.1923 - acc: 0.9394 - val_loss: 0.5069 - val_acc: 0.8257
+Epoch 8/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.1582 - acc: 0.9539 - val_loss: 0.3518 - val_acc: 0.8983
+Epoch 9/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.1327 - acc: 0.9636 - val_loss: 0.5647 - val_acc: 0.8378
+Epoch 10/20
+1649/1649 [==============================] - 167s 101ms/step - loss: 0.1148 - acc: 0.9660 - val_loss: 0.5346 - val_acc: 0.8475
+Epoch 11/20
+1649/1649 [==============================] - 166s 101ms/step - loss: 0.0945 - acc: 0.9763 - val_loss: 0.4302 - val_acc: 0.8668
+Epoch 12/20
+1649/1649 [==============================] - 169s 102ms/step - loss: 0.0874 - acc: 0.9812 - val_loss: 0.3180 - val_acc: 0.9007
+Epoch 13/20
+1649/1649 [==============================] - 171s 104ms/step - loss: 0.0778 - acc: 0.9782 - val_loss: 0.6670 - val_acc: 0.8378
+Epoch 14/20
+1649/1649 [==============================] - 171s 104ms/step - loss: 0.0666 - acc: 0.9830 - val_loss: 0.3202 - val_acc: 0.9080
+Epoch 15/20
+1649/1649 [==============================] - 171s 104ms/step - loss: 0.0661 - acc: 0.9830 - val_loss: 0.3158 - val_acc: 0.9056
+Epoch 16/20
+1649/1649 [==============================] - 170s 103ms/step - loss: 0.0416 - acc: 0.9903 - val_loss: 0.3277 - val_acc: 0.9031
+Epoch 17/20
+1649/1649 [==============================] - 169s 102ms/step - loss: 0.0344 - acc: 0.9933 - val_loss: 0.5134 - val_acc: 0.8692
+Epoch 18/20
+1649/1649 [==============================] - 169s 102ms/step - loss: 0.0420 - acc: 0.9903 - val_loss: 0.3912 - val_acc: 0.8983
+Epoch 19/20
+1649/1649 [==============================] - 169s 102ms/step - loss: 0.0289 - acc: 0.9945 - val_loss: 0.3458 - val_acc: 0.9056
+Epoch 20/20
+1649/1649 [==============================] - 169s 102ms/step - loss: 0.0304 - acc: 0.9939 - val_loss: 0.3413 - val_acc: 0.9031
+Training time: -3393.157963037491
+413/413 [==============================] - 42s 101ms/step
+[INFO] loss=0.3413, accuracy: 90.3148%
+
+
+model = VGG16(input_tensor=image_input, include_top=True,weights='imagenet')
+model.summary()
+last_layer = model.get_layer('fc2').output
+#x= Flatten(name='flatten')(last_layer)
+out = Dense(num_classes, activation='softmax', name='output')(last_layer)
+custom_vgg_model = Model(image_input, out)
+custom_vgg_model.summary()
+
+for layer in custom_vgg_model.layers[:-1]:
+	layer.trainable = False
+
+custom_vgg_model.layers[3].trainable
+
+custom_vgg_model.compile(loss='categorical_crossentropy',optimizer='rmsprop',metrics=['accuracy'])
+
+
+t=time.time()
+#	t = now()
+hist = custom_vgg_model.fit(X_train, y_train, batch_size=32, epochs=20, verbose=1, validation_data=(X_test, y_test))
