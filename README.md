@@ -59,3 +59,12 @@ Softwares and libraries used : Python, Tensorflow, keras, Sklearn.
       Testing Accuracy : 65.15%
     
     
+# Currently trying to make more data for each class using the following Data Augmentation Techniques
+      Scaling
+      Rotation (at 90 degrees)
+      Rotation (at finer angles)
+      Flipping
+      Adding Salt and Pepper noise
+      Lighting condition
+
+      
